@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef, useState } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Board from "./components/Board";
+import Drink from "./components/Drink";
+
+export default function App() {
+	const [isDrink, setDrink] = useState(false);
+	const audioRef = useRef();
+	const reset = () => {
+		setDrink(false);
+	};
+
+	const handleDrink = () => {
+		setDrink(true);
+		audioRef.current.play();
+	};
+
+	useEffect(() => {
+		audioRef.current.volume = 0.3;
+	}, []);
+
+	return (
+		<div className=" bg-slate-800 min-h-screen w-full flex justify-center items-center">
+			<div className="w-full">
+				{isDrink ? (
+					<Drink reset={reset} />
+				) : (
+					<div>
+						<Board handleDrink={handleDrink} />
+					</div>
+				)}
+			</div>
+			<audio src="/sound.mp3" ref={audioRef} />
+		</div>
+	);
 }
-
-export default App;
